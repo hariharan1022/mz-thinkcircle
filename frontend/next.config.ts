@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  images: {
+    unoptimized: true,
+  },
   allowedDevOrigins: [
     "localhost:3000",
     "127.0.0.1:3000",
