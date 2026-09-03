@@ -1,6 +1,6 @@
-import { getApiUrl } from "@/lib/config";
+import { getApiUrl, setCustomApiUrl } from "@/lib/config";
 
-export { getApiUrl };
+export { getApiUrl, setCustomApiUrl };
 
 export type User = {
   id: number;

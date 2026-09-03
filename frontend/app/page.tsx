@@ -17,7 +17,7 @@ import AchievementsView from "@/components/achievements/AchievementsView";
 import ReportsView from "@/components/reports/ReportsView";
 import { useGdLiveWs, GDLiveWsMessage } from "@/lib/useGdLiveWs";
 import { useVoiceAnnouncement } from "@/services/voice/useVoiceAnnouncement";
-import { AllTimeAchiever, ComprehensiveLeaderboard, GDLiveLeaderboardEntry, LeaderboardRanking, LeaderboardStats, Progress, SoloQuote, SoloStartResponse, SoloSubmitResponse, User, apiRequest, hostGdLiveMeeting, endGdLiveMeeting, getGdLiveState, changePassword, getApiUrl, downloadGdLivePdfReport, downloadGdLiveExcelReport, exportGdLiveAttendance, downloadOverallPdfReport } from "@/lib/api";
+import { AllTimeAchiever, ComprehensiveLeaderboard, GDLiveLeaderboardEntry, LeaderboardRanking, LeaderboardStats, Progress, SoloQuote, SoloStartResponse, SoloSubmitResponse, User, apiRequest, hostGdLiveMeeting, endGdLiveMeeting, getGdLiveState, changePassword, getApiUrl, setCustomApiUrl, downloadGdLivePdfReport, downloadGdLiveExcelReport, exportGdLiveAttendance, downloadOverallPdfReport } from "@/lib/api";
 
 function speak(text: string) {
   if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -2469,9 +2469,41 @@ export default function Home() {
                 </div>
 
                 {message && (
-                  <div className="flex items-center gap-2 rounded-xl p-3 text-xs bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/25">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{message}</span>
+                  <div className="space-y-2 rounded-xl p-3 text-xs bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/25">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{message}</span>
+                    </div>
+                    {message.includes("Backend unavailable") && (
+                      <div className="pt-2 border-t border-red-500/20 text-[11px] text-slate-600 dark:text-slate-300 space-y-1.5">
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
+                          ⚙️ Running on Cloud / Vercel? Enter your public Backend API URL:
+                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <input
+                            type="text"
+                            placeholder="e.g. https://your-backend.onrender.com or ngrok URL"
+                            defaultValue={getApiUrl()}
+                            id="custom-backend-input"
+                            className="flex-1 px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const input = document.getElementById("custom-backend-input") as HTMLInputElement;
+                              if (input && input.value) {
+                                setCustomApiUrl(input.value);
+                                setMessage("");
+                                handleLogin();
+                              }
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px] hover:bg-blue-500 transition-colors shrink-0 shadow-sm"
+                          >
+                            Save & Retry
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
